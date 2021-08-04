@@ -1,3 +1,3 @@
-const addUser = {};
+const addUser = () => {};
 
 module.exports = addUser;

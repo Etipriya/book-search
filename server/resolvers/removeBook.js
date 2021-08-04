@@ -1,3 +1,3 @@
-const removeBook = {};
+const removeBook = () => {};
 
 module.export = removeBook;

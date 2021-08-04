@@ -1,3 +1,3 @@
-const saveBook = {};
+const saveBook = () => {};
 
 module.export = saveBook;
