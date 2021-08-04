@@ -13,7 +13,7 @@ import SavedBooks from "./components/SavedBooks";
 import Navbar from "./contexts/Navbar";
 
 const httpLink = createHttpLink({
-  uri: process.env.GRAPHQL_URL || "http://localhost:4000/",
+  uri: process.env.GRAPHQL_URL || "http://localhost:3001/",
 });
 
 const authLink = setContext((_, { headers }) => {
