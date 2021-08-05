@@ -1,11 +1,13 @@
 const { ApolloServer } = require("apollo-server-express");
 const express = require("express");
 const path = require("path");
-const db = require("./config/connection");
+
 // const routes = require('./routes');
 
 const typeDefs = require("./schemas");
 const resolvers = require("./resolvers");
+
+const db = require("./config/connection");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -18,6 +20,7 @@ const server = new ApolloServer({
 const startServer = async () => {
   await server.start();
   server.applyMiddleware({ app });
+  return app;
 };
 startServer();
 
@@ -32,5 +35,8 @@ if (process.env.NODE_ENV === "production") {
 // app.use(routes);
 
 db.once("open", () => {
-  app.listen(PORT, () => console.log(`🌍 Now listening on localhost:${PORT}`));
+  app.listen(PORT, () => {
+    // console.log(`🌍 Now listening on localhost:${PORT}`);
+    console.log(`Use Graphql at http://localhost:${PORT}${server.graphqlPath}`);
+  });
 });
