@@ -4,13 +4,13 @@ const path = require("path");
 
 // const routes = require('./routes');
 
-const typeDefs = require("./schemas");
-const resolvers = require("./resolvers");
+const typeDefs = require("./schema/typeDefs");
+const resolvers = require("./schema/resolvers");
 
 const db = require("./config/connection");
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 
 const server = new ApolloServer({
   typeDefs,
