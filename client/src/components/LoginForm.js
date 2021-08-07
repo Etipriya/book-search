@@ -1,16 +1,31 @@
 // see SignupForm.js for comments
-import { useMutation } from "@apollo/client'";
+import { useMutation } from "@apollo/client";
 import React, { useState } from "react";
 import { Form, Button, Alert } from "react-bootstrap";
 
-// import { loginUser } from '../utils/API';
-import { LOGIN } from "../mutation";
+import { LOGIN } from "../mutations";
 import Auth from "../utils/auth";
 
 const LoginForm = () => {
   const [userFormData, setUserFormData] = useState({ email: "", password: "" });
   const [validated] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+
+  // use mutation hook for the login mutation and pass functions to handle success and error
+  const [login] = useMutation(LOGIN, {
+    onCompleted: data => {
+      // get the token and user from the graphQL data response for login mutation
+      const { token, user } = data.login;
+      console.log(user);
+
+      // use this method to save the token in local storage
+      Auth.login(token);
+    },
+    onError: error => {
+      console.log(error.message);
+      throw new Error("something went wrong!");
+    },
+  });
 
   const handleInputChange = event => {
     const { name, value } = event.target;
@@ -28,16 +43,12 @@ const LoginForm = () => {
     }
 
     try {
-      await login({});
-      // const response = await loginUser(userFormData);
-
-      if (!response.ok) {
-        throw new Error("something went wrong!");
-      }
-
-      const { token, user } = await response.json();
-      console.log(user);
-      Auth.login(token);
+      // use the function to pass in the variables which will execute the mutation
+      await login({
+        variables: {
+          loginInput: userFormData,
+        },
+      });
     } catch (err) {
       console.error(err);
       setShowAlert(true);
