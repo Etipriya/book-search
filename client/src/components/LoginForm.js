@@ -1,4 +1,3 @@
-// see SignupForm.js for comments
 import { useMutation } from "@apollo/client";
 import React, { useState } from "react";
 import { Form, Button, Alert } from "react-bootstrap";
@@ -11,14 +10,9 @@ const LoginForm = () => {
   const [validated] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
 
-  // use mutation hook for the login mutation and pass functions to handle success and error
   const [login] = useMutation(LOGIN, {
     onCompleted: data => {
-      // get the token and user from the graphQL data response for login mutation
       const { token, user } = data.login;
-      console.log(user);
-
-      // use this method to save the token in local storage
       Auth.login(token);
     },
     onError: error => {
@@ -35,7 +29,6 @@ const LoginForm = () => {
   const handleFormSubmit = async event => {
     event.preventDefault();
 
-    // check if form has everything (as per react-bootstrap docs)
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
       event.preventDefault();
@@ -43,7 +36,6 @@ const LoginForm = () => {
     }
 
     try {
-      // use the function to pass in the variables which will execute the mutation
       await login({
         variables: {
           loginInput: userFormData,
