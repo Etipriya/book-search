@@ -1,6 +1,5 @@
 import React from "react";
-import { useQuery } from "@apollo/client";
-import { useMutation } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import {
   Jumbotron,
   Container,
@@ -9,15 +8,15 @@ import {
   Button,
 } from "react-bootstrap";
 
-import { ME } from "../queries";
-import { REMOVE_BOOK } from "../mutations";
+import { GET_USER } from "../queries";
+import { DELETE_BOOK } from "../mutation";
 
 const SavedBooks = () => {
-  // use query hook for the me query and get the data, error and loading state from graphQL
-  const { data, error, loading } = useQuery(ME);
+  // use query hook for the GET_USER query and get the data, error and loading state from graphQL
+  const { data, error, loading } = useQuery(GET_USER);
 
   // use mutation hook for the removeBook mutation and pass functions to handle success and error
-  const [removeBook] = useMutation(REMOVE_BOOK);
+  const [removeBook] = useMutation(DELETE_BOOK);
 
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
   const handleDeleteBook = async bookId => {
@@ -32,12 +31,13 @@ const SavedBooks = () => {
     }
   };
 
-  // if state is loading
+  // if it's loading render a loading div
+
   if (loading) {
     return <h2>LOADING...</h2>;
   }
 
-  // if state is error
+  // if there's an error render an error div
   if (error) {
     return <h2>ERROR...</h2>;
   }
