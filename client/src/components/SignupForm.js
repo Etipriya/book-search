@@ -2,27 +2,30 @@ import { useMutation } from "@apollo/client";
 import React, { useState } from "react";
 import { Form, Button, Alert } from "react-bootstrap";
 
-import { ADD_USER } from "../mutations";
+import { SIGNUP } from "../mutation";
 import Auth from "../utils/auth";
 
 const SignupForm = () => {
+  // set initial form state
   const [userFormData, setUserFormData] = useState({
     username: "",
     email: "",
     password: "",
   });
-
+  // set state for form validation
   const [validated] = useState(false);
-
+  // set state for alert
   const [showAlert, setShowAlert] = useState(false);
 
-  const [addUser] = useMutation(ADD_USER, {
+  const [addUser] = useMutation(SIGNUP, {
     onCompleted: data => {
+      console.log(data);
       const { token, user } = data.addUser;
+      console.log(user);
       Auth.login(token);
     },
     onError: error => {
-      console.log(error.message);
+      console.log("here", error.message);
       throw new Error("something went wrong!");
     },
   });
@@ -35,19 +38,20 @@ const SignupForm = () => {
   const handleFormSubmit = async event => {
     event.preventDefault();
 
+    // check if form has everything (as per react-bootstrap docs)
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
       event.preventDefault();
       event.stopPropagation();
     }
 
+    //if the signup is successful the user will be added to the database
     try {
       await addUser({
-        variables: {
-          addUserInput: userFormData,
-        },
+        variables: { signupInput: userFormData },
       });
     } catch (err) {
+      // if the signup is unsuccessful, an error will be thrown and displayed in the console
       console.error(err);
       setShowAlert(true);
     }
@@ -61,7 +65,9 @@ const SignupForm = () => {
 
   return (
     <>
+      {/* This is needed for the validation functionality above */}
       <Form noValidate validated={validated} onSubmit={handleFormSubmit}>
+        {/* show alert if server response is bad */}
         <Alert
           dismissible
           onClose={() => setShowAlert(false)}
